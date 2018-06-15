@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Ilya Abyzov</Authors>
+    <Description>ASP.NET Core security middleware enabling Jira authentication.</Description>
+    <PackageProjectUrl>https://github.com/iluhaa/AspNet.Security.OAuth.Jira</PackageProjectUrl>
+    <RepositoryUrl>git://github.com/iluhaa/AspNet.Security.OAuth.Jira</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>jira;aspnetcore;authentication;oauth;security</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

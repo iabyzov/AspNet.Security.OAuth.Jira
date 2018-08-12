@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using AspNet.Security.OAuth.Jira.Tokens;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
@@ -13,6 +14,9 @@ namespace AspNet.Security.OAuth.Jira
         public JiraOptions()
         {
             CallbackPath = new PathString(JiraDefaults.CallbackPath);
+            ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "key");
+            ClaimActions.MapJsonKey(ClaimTypes.Name, "displayName");
+            ClaimActions.MapJsonKey("urn:jira:self", "self");
             _stateCookieBuilder = new JiraCookieBuilder(this)
             {
                 Name = JiraDefaults.CookieName,
@@ -73,6 +77,11 @@ namespace AspNet.Security.OAuth.Jira
         /// Gets or sets the URI the middleware will access to exchange the request OAuth1 token.
         /// </summary>
         public string RequestTokenEndpoint { get; set; }
+
+        /// <summary>
+        /// Gets or sets the URI the middleware will access to get Jira user information
+        /// </summary>
+        public string UserInfoEndpoint { get; set; }
 
         public ISecureDataFormat<RequestToken> StateDataFormat { get; set; }
 

@@ -75,8 +75,9 @@ namespace AspNet.Security.OAuth.Jira
 
             var properties = requestToken.Properties;
             SaveAccessTokenToProperties(accessToken, properties);
+            var user = await RetrieveUserDetailsAsync(accessToken);
             
-            var ticket = await CreateTicketAsync(properties, accessToken, null);
+            var ticket = await CreateTicketAsync(properties, accessToken, user);
 
             return HandleRequestResult.Success(ticket);
         }
@@ -164,6 +165,22 @@ namespace AspNet.Security.OAuth.Jira
                 TokenSecret = qs["oauth_token_secret"]
             };
 
+            return result;
+        }
+
+        private async Task<JObject> RetrieveUserDetailsAsync(AccessToken accessToken)
+        {
+            var authenticatior = OAuth1Authenticator.ForProtectedResource(Options.ConsumerKey, Options.ConsumerSecret, accessToken.Token, accessToken.TokenSecret);
+            authenticatior.SignatureMethod = OAuthSignatureMethod.RsaSha1;
+            var client = new RestClient(Options.UserInfoEndpoint)
+            {
+                Authenticator = authenticatior
+            };
+
+            var request = new RestRequest(Method.GET);
+            var response = await client.ExecuteTaskAsync(request);
+
+            var result = JObject.Parse(response.Content);
             return result;
         }
 
